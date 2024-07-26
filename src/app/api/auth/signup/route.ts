@@ -14,7 +14,13 @@ export async function POST(request: Request) {
       })
    
       if (existingUser.length > 0) {
-        return new Response(JSON.stringify({message: "Email already exist"}))
+        return new Response(JSON.stringify({
+          status: 400,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          message: "User already exists"
+        }));
       }
       
       const newUser = await db.user.create({
