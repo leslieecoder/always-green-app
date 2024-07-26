@@ -1,7 +1,7 @@
 "use client"
 import Card from '@/components/card'
 import React from 'react'
-
+import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -29,6 +29,8 @@ const signInSchema = z.object({
 
 export default function SigninPage() {
 
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -36,9 +38,20 @@ export default function SigninPage() {
       password:""
     }
   })
-  const onSubmit = (data: z.infer<typeof signInSchema>) => {
-    console.log(data)
-    toast.success("Logged in!")
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    const { email, password } = data
+    try {
+      const result = await fetch('/api/auth/signin', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      if (result.ok) {
+        toast.success("Logged in")
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      toast.error("Error logging in")
+    }
   }
   return (
     <div className='flex justify-center items-center h-screen'>
