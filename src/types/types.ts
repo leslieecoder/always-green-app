@@ -1,17 +1,25 @@
 export interface UserType {
-  id?: String,
-  email: String,
-  firstName: String,
-  lastName: String,
-  password?: String,
+  id?: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  password?: string,
   createdAt?: Date
 }
 export interface ClientType {
-  id?: String,
-  fullName: String,
-  address: String,
-  email: String,
-  phone: String,
+  id: string,
+  fullName: string,
+  address: string,
+  email: string,
+  phone: string,
   createdAt?: Date,
-  userId: String
+  userId: string
+}
+
+export interface ServiceType {
+  id?: string,
+  name: string,
+  total: number,
+  deposit: number,
+  userId: string
 }

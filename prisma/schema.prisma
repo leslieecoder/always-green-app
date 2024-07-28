@@ -21,14 +21,33 @@ model User {
 model Client {
   id        String   @id @default(uuid())
   fullName  String
-  email     String
+  email     String   @unique
   address   String
   phone     String
-  service   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  service  Service[]
+}
+
+model Service {
+  id        String   @id @default(uuid())
+  name      String
   date      DateTime
   total     Float
   deposit   Float
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id])
   createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  updatedAt DateTime @updatedAt
 }
+
+// model Type {
+//   id        String   @id @default(uuid())
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   serviceId String
+//   service   Service  @relation(fields: [serviceId], references: [id])
+// }

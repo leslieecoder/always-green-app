@@ -5,6 +5,7 @@ import Card from '@/components/card'
 import { IoIosAddCircle } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
+import { RiPlantFill } from "react-icons/ri";
 import Link from 'next/link';
 export default function page() {
   const { user, loading } = useUser()
@@ -25,12 +26,20 @@ export default function page() {
             </Link>
           </Card>
           <Card className='w-full md:w-[200px] flex flex-col gap-4 items-center'>
-            <FaUser className='text-primary text-[50px]'/>
-            <p className='font-bold'>Clients</p>
+            <Link href='/client' className='flex flex-col gap-4 items-center'>
+              <FaUser className='text-primary text-[50px]'/>
+              <p className='font-bold'>Clients</p>
+            </Link>
           </Card>
           <Card className='w-full md:w-[200px] flex flex-col gap-4 items-center'>
-            <IoDocumentText className='text-primary text-[50px]'/>
-            <p className='font-bold'>Reports</p>
+            <RiPlantFill className='text-primary text-[50px]'/>
+            <p className='font-bold'>Services</p>
+          </Card>
+          <Card className='w-full md:w-[200px] flex flex-col gap-4 items-center'>
+            <Link href='/service/new' className='flex flex-col gap-4 items-center'>
+              <IoIosAddCircle className='text-primary text-[50px]'/>
+              <p className='font-bold'>Add Service</p>
+            </Link>
           </Card>
         </div>
       </section>

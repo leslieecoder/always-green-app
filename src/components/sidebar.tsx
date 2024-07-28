@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Logo from "../../public/full-logo.png"
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import Image from 'next/image'
+import Link from 'next/link';
 
 export default function SideBar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -25,10 +26,10 @@ export default function SideBar() {
       
       <div className={`${isOpen ? 'block' : 'hidden'} md:block`}>
         <ul className='flex flex-col w-full items-center text-white mt-4 md:mt-16'>
-          <li className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Dashboard</li>
-          <li className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Clients</li>
-          <li className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Reports</li>
-          <li className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Settings</li>
+          <Link href="/dashboard" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Dashboard</Link>
+          <Link href="/client" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Clients</Link>
+          <Link href="" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Reports</Link>
+          <Link href="" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Settings</Link>
         </ul>
       </div>
     </nav>
