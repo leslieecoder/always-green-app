@@ -1,6 +1,7 @@
 "use client"
 import Card from '@/components/card'
 import React from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { handleSignup } from '@/services/authService'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -67,11 +68,11 @@ export default function SigninPage() {
     }
   }
   return (
-    <div className='flex justify-center items-center h-screen'>
+    <div className='flex justify-center items-center min-h-screen'>
       <Card className="w-[300px]">
-        <h1>Log in</h1>
+        <h1 className='mb-8 text-primary font-bold'>Create new account</h1>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4'>
             <FormField
               control={form.control}
               name='firstName'
@@ -135,6 +136,7 @@ export default function SigninPage() {
             <Button className='mt-4 w-full' type='submit'>Log in</Button>
           </form>
         </Form>
+        <Link className='text-center block text-sm mt-5 underline text-primary' href='/auth/signin'>Already have an account?</Link>
       </Card>
     </div>
   )

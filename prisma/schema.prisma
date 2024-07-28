@@ -15,11 +15,20 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  clients   Client[]
 }
 
 model Client {
   id        String   @id @default(uuid())
-  firstName String
-  lastName  String
-  createdat DateTime @default(now())
+  fullName  String
+  email     String
+  address   String
+  phone     String
+  service   String
+  date      DateTime
+  total     Float
+  deposit   Float
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }

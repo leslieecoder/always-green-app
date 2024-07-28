@@ -33,5 +33,5 @@ export async function middleware(request: NextRequest) {
 
 // Protected routes
 export const config = {
-  matcher: ['/dashboard', '/profile', '/settings', '/transactions', '/category'],
+  matcher: ['/dashboard', '/client/new', '/settings', '/transactions', '/category'],
 };

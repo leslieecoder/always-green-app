@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-
+import Link from 'next/link'
 import  {
   Form,
   FormControl,
@@ -41,22 +41,25 @@ export default function SigninPage() {
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     const { email, password } = data
     try {
-      const result = await fetch('/api/auth/signin', {
+      const response = await fetch('/api/auth/signin', {
         method: 'POST',
         body: JSON.stringify({ email, password })
       })
-      if (result.ok) {
+      const result = await response.json()
+      if (result.status === 200) {
         toast.success("Logged in")
         router.push('/dashboard')
+      } else {
+        toast.error("Incorrect email or password")
       }
     } catch (error) {
       toast.error("Error logging in")
     }
   }
   return (
-    <div className='flex justify-center items-center h-screen'>
+    <div className='flex justify-center items-center min-h-screen'>
       <Card className="w-[300px]">
-        <h1>Log in</h1>
+        <h1 className='mb-8 text-primary font-bold'>Log in</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className='mt-4'>
@@ -90,6 +93,9 @@ export default function SigninPage() {
             <Button className='mt-4 w-full' type='submit'>Log in</Button>
           </form>
         </Form>
+        <Link className='text-center block text-sm mt-5 underline text-primary' href='/auth/signup'>
+          Don't have an account? Sign up
+        </Link>
       </Card>
     </div>
   )
