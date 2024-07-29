@@ -7,7 +7,8 @@ import { IoDocumentText } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { RiPlantFill } from "react-icons/ri";
 import Link from 'next/link';
-export default function page() {
+
+export default function DashboardPage() {
   const { user, loading } = useUser()
 
   return (

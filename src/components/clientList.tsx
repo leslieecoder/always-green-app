@@ -33,7 +33,7 @@ export default function ClientList() {
 
     fetchClients()
   }, [user])
-  console.log(clients)
+
   return (
     <Table className='border'>
       <TableHeader>

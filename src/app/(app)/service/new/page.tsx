@@ -51,7 +51,7 @@ const serviceSchema = z.object({
   clientId: z.string()
 })
 
-export default function page() {
+export default function NewServicePage() {
   const { user, loading } = useUser()
 
   const [date, setDate] = useState<Date>()

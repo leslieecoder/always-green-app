@@ -94,7 +94,7 @@ export default function SigninPage() {
           </form>
         </Form>
         <Link className='text-center block text-sm mt-5 underline text-primary' href='/auth/signup'>
-          Don't have an account? Sign up
+          Don&apos;t have an account? Sign up
         </Link>
       </Card>
     </div>

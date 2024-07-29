@@ -4,11 +4,11 @@ import { useParams, useSearchParams} from 'next/navigation';
 
 export default function Page() {
   const params = useParams();
-const algo = useSearchParams()
+
 
   useEffect(() => {
     console.log(params);
-    console.log(algo.get("id"))
+
   }, [params]);
 
   return (

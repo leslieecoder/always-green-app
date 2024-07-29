@@ -33,7 +33,7 @@ const clientSchema = z.object({
   userId: z.string(),
 })
 
-export default function page() {
+export default function NewClientPage() {
   const { user, loading } = useUser()
 
   const form = useForm<z.infer<typeof clientSchema>>({
