@@ -22,4 +22,5 @@ export interface ServiceType {
   total: number,
   deposit: number,
   userId: string
+  date: string
 }

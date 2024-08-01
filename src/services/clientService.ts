@@ -28,3 +28,15 @@ export async function getClientsByUserId(userId: string) {
         throw new Error(await res.text())
     }
 }
+
+export async function getClientById(id: string) {
+  const res = await fetch(`/api/client/${id}`)
+
+  if(res.ok){
+      const result = await res.json()
+      return result
+  }
+  else{
+      throw new Error(await res.text())
+  }
+}

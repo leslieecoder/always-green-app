@@ -4,7 +4,17 @@ import { jwtVerify } from 'jose';
 
 const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'your-secret-key');
 
+// List of public routes
+const publicRoutes = ['/auth/signin', '/auth/signup', '/about', '/contact'];
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Check if the requested path is a public route
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
   // Parse cookies
   const cookies = parse(request.headers.get('cookie') || '');
   const token = cookies.session;
@@ -20,7 +30,6 @@ export async function middleware(request: NextRequest) {
     const { payload } = await jwtVerify(token, SECRET_KEY);
 
     // Token is valid, allow the request to proceed
-
     return NextResponse.next();
   } catch (error) {
     console.error('Error verifying token:', error);
@@ -31,7 +40,7 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-// Protected routes
+// Apply middleware to all routes except public ones
 export const config = {
-  matcher: ['/dashboard', '/client/new', '/settings', '/transactions', '/category'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

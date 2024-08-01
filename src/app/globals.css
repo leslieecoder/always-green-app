@@ -68,3 +68,9 @@
     @apply bg-background text-foreground;
   }
 }
+.client-list tr:nth-child(even) {
+  @apply bg-[#F6F6F6];
+}
+.client-list td, .client-list th {
+  @apply border border-[#EDEDED];
+}

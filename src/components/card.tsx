@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 interface CardProps {
   children: ReactNode,
-  className: String
+  className?: String
 }
 
 export default function Card({children, className}: CardProps) {
