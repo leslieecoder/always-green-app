@@ -1,6 +1,6 @@
 "use client"
 import Card from '@/components/card'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -18,6 +18,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'react-toastify'
 
+
+
 const signInSchema = z.object({
   email: z.string().email({
     message: "Invalid email format"
@@ -30,6 +32,7 @@ const signInSchema = z.object({
 export default function SigninPage() {
 
   const router = useRouter()
+  const [error, setError] = useState<string | undefined>(undefined)
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -46,11 +49,11 @@ export default function SigninPage() {
         body: JSON.stringify({ email, password })
       })
       const result = await response.json()
+      setError(undefined)
       if (result.status === 200) {
-        toast.success("Logged in")
         router.push('/dashboard')
       } else {
-        toast.error("Incorrect email or password")
+        setError(result.message)
       }
     } catch (error) {
       toast.error("Error logging in")
@@ -60,6 +63,7 @@ export default function SigninPage() {
     <div className='flex justify-center items-center min-h-screen'>
       <Card className="w-[300px]">
         <h1 className='mb-8 text-primary font-bold'>Log in</h1>
+        {error && <div className='bg-red-50 p-3 text-sm rounded-sm border text-red-600 border-red-400'>{error}</div>}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className='mt-4'>
