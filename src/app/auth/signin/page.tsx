@@ -63,7 +63,10 @@ export default function SigninPage() {
     <div className='flex justify-center items-center min-h-screen'>
       <Card className="w-[300px]">
         <h1 className='mb-8 text-primary font-bold'>Log in</h1>
-        {error && <div className='bg-red-50 p-3 text-sm rounded-sm border text-red-600 border-red-400'>{error}</div>}
+        {error && <div className='bg-red-50 p-3 text-sm rounded-sm border text-red-600 border-red-400 flex justify-between'>
+                    {error}
+                    <button onClick={()=>setError(undefined)}>x</button>
+                  </div>}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className='mt-4'>
