@@ -28,3 +28,15 @@ export async function getServicesByClientId(clientId: string) {
         throw new Error(await res.text())
     }
 }
+
+export async function getServiceById(id: string) {
+  const res = await fetch(`/api/service/${id}`)
+
+  if(res.ok){
+      const result = await res.json()
+      return result
+  }
+  else{
+      throw new Error(await res.text())
+  }
+}

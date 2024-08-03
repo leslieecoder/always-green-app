@@ -9,7 +9,19 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { Calendar as CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
-import { format } from "date-fns"
+import { useRouter } from 'next/navigation'
+import { format, set } from "date-fns"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import {
   Popover,
   PopoverContent,
@@ -99,14 +111,15 @@ const serviceSchema = z.object({
 })
 
 export default function Client() {
-  const param = useParams()
   const [client, setClient] = useState<ClientType | null>(null)
   const [editMode, setEditMode] = useState(false)
   const [services, setServices] = useState<ServiceType[]>([])
   const [totalServices, setTotalServices] = useState(0)
   const [date, setDate] = useState<Date>()
-
+  
   const { user, loading } = useUser()
+  const router = useRouter()
+  const param = useParams()
 
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
@@ -173,10 +186,29 @@ export default function Client() {
     fetchServices()
   },[])
 
-  async function onSubmit(values: z.infer<typeof clientSchema>) {
+  async function deleteClient() {
     try {
-      const response = await fetch("/api/client", {
-        method: "POST",
+      const response = await fetch(`/api/client/${client?.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      
+      if (response.status === 200) {
+        toast.success("Client deleted successfully")
+        router.push('/client')
+      }
+    } catch {
+      console.log("error")
+    }
+  }
+
+  async function onSubmit(values: z.infer<typeof clientSchema>) {
+    const clientId: string = Array.isArray(param.id) ? param.id[0] : param.id;
+    try {
+      const response = await fetch(`/api/client/${clientId}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
@@ -186,8 +218,9 @@ export default function Client() {
         })
       })
       
-      if (response.status === 201) {
-        toast.success("Client added successfully")
+      if (response.status === 200) {
+        toast.success("Client updated successfully")
+        setEditMode(false)
       }
     } catch {
       console.log("error")
@@ -239,7 +272,24 @@ export default function Client() {
           <h1 className='text-lg font-bold'>{client?.fullName}</h1>
           <div className='flex gap-4'>
             <button onClick={()=>setEditMode(true)} className='bg-secondary p-3 rounded-full'><MdEdit className='text-white cursor-pointer'/></button>
-            <button className='bg-secondary p-3 rounded-full'><MdDelete className='text-white cursor-pointer'/></button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button className='bg-secondary p-3 rounded-full'><MdDelete className='text-white cursor-pointer'/></button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to delete this client?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete this client
+                    and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={()=>deleteClient()}>Yes, delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
         <Card className="mt-8 w-full">
@@ -253,7 +303,7 @@ export default function Client() {
                     name="fullName"
                     render={({field})=> (
                       <FormItem>
-                        <FormLabel></FormLabel>
+                        <FormLabel>Name</FormLabel>
                           <FormControl>
                             <Input disabled={!editMode} className='w-full md:w-[400px]' placeholder='Full Name' {...field}/>
                           </FormControl>
@@ -267,7 +317,7 @@ export default function Client() {
                     name="address"
                     render={({field})=> (
                       <FormItem>
-                        <FormLabel></FormLabel>
+                        <FormLabel>Address</FormLabel>
                           <FormControl>
                             <Input disabled={!editMode} placeholder='Address' className='w-full md:w-[400px]' {...field}/>
                           </FormControl>
@@ -283,7 +333,7 @@ export default function Client() {
                     name="email"
                     render={({field})=> (
                       <FormItem>
-                        <FormLabel></FormLabel>
+                        <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input disabled={!editMode} type='email' className='w-full md:w-[400px]' placeholder='Email' {...field}/>
                           </FormControl>
@@ -297,7 +347,7 @@ export default function Client() {
                     name="phone"
                     render={({field})=> (
                       <FormItem>
-                        <FormLabel></FormLabel>
+                        <FormLabel>Phone</FormLabel>
                           <FormControl>
                             <Input disabled={!editMode} type='type' className='w-full md:w-[400px]' placeholder='Phone Number' {...field}/>
                           </FormControl>
@@ -448,7 +498,7 @@ export default function Client() {
               {services.map((service) => {
                 return (
                   <TableRow key={service.id}>
-                    <TableCell>{service.name}</TableCell>
+                    <TableCell><a href={`/service/${service.id}`} className='underline cursor-pointer'>{service.name}</a></TableCell>
                     <TableCell>{formatDate(service.date)}</TableCell>
                     <TableCell>$ {service.deposit}</TableCell>
                     <TableCell>$ {service.total - service.deposit}</TableCell>
