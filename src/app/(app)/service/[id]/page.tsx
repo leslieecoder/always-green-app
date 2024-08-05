@@ -62,11 +62,13 @@ const serviceSchema = z.object({
 })
 
 export default function Service() {
-  const [service, setService] = useState<ServiceType[]>([])
+  const [service, setService] = useState<ServiceType | undefined>(undefined)
   const [date, setDate] = useState<Date>()
 
   const router = useRouter()
   const param = useParams()
+
+  const { user, loading } = useUser()
 
   const formService = useForm<z.infer<typeof serviceSchema>>({
     resolver: zodResolver(serviceSchema),
@@ -89,12 +91,13 @@ export default function Service() {
           return
         }
         const response = await getServiceById(serviceId)
-        console.log(response)
+
+        setService(response.services[0])
         formService.reset({
-          name: response.services.name,
-          date: new Date(response.services.date),
-          total: response.services.total,
-          deposit: response.services.deposit,
+          name: response.services[0].name,
+          date: new Date(response.services[0].date),
+          total: response.services[0].total.toString(),
+          deposit: response.services[0].deposit.toString(),
         })
       } catch(error) {
         console.log(error)
@@ -105,14 +108,19 @@ export default function Service() {
     fetchService()
   },[])
 
-  const editService = async (data: z.infer<typeof serviceSchema>) => {
+  async function onSubmit(data: z.infer<typeof serviceSchema>) {
+    console.log("here")
     try {
       await fetch(`/api/service/${param.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          ...data,
+          total: parseFloat(data.total),
+          deposit: parseFloat(data.deposit)
+        })
       })
       toast.success("Service updated")
       router.push('/service')
@@ -124,20 +132,38 @@ export default function Service() {
 
   return (
     <div>
-    <Card className="mt-8 w-full">
-      <h1>Edit service</h1>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/client">Clients</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/client/${service?.clientId}`}>Client</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Edit service</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <h1 className='mt-8 font-bold text-lg'>Edit service</h1>
       <Form {...formService}>
-        <form onSubmit={formService.handleSubmit(editService)}>
-          <div className='flex flex-col gap-4 mt-4'>
+        <form onSubmit={formService.handleSubmit(onSubmit)}>
+          <div className='flex flex-col md:flex-row gap-4 mt-4'>
             <FormField
               control={formService.control}
               name="name"
               render={({field})=> (
                 <FormItem>
-                  <FormLabel></FormLabel>
+                  <FormLabel>Service</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
-                        <SelectTrigger className='w-full'>
+                      <Select {...field} onValueChange={field.onChange}>
+                        <SelectTrigger className='w-full md:w-[400px]'>
                           <SelectValue placeholder="Service" />
                         </SelectTrigger>
                         <SelectContent>
@@ -157,7 +183,7 @@ export default function Service() {
               name="date"
               render={({field})=> (
                 <FormItem>
-                  <FormLabel></FormLabel>
+                  <FormLabel>Date</FormLabel>
                     <FormControl>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -169,14 +195,14 @@ export default function Service() {
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {date ? format(date, "PPP") : <span>Pick a date</span>}
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
                         <Calendar
                           mode="single"
                           className="text-backgroundDark dark:!text-white bg"
-                          selected={field.value}
+                          selected={new Date(field.value)}
                           onSelect={(date)=> {
                             field.onChange(date)
                             setDate(date)
@@ -192,15 +218,15 @@ export default function Service() {
               )}
             />
           </div>
-          <div className='flex flex-col gap-4 mt-4'>
+          <div className='flex flex-col md:flex-row gap-4 mt-4'>
             <FormField
               control={formService.control}
               name="total"
               render={({field})=> (
                 <FormItem>
-                  <FormLabel></FormLabel>
+                  <FormLabel>Total price</FormLabel>
                     <FormControl>
-                      <Input className='w-full' placeholder='Total Price' {...field}/>
+                      <Input className='w-full md:w-[400px]' placeholder='Total Price' {...field}/>
                     </FormControl>
                     <FormMessage/>
 
@@ -212,9 +238,9 @@ export default function Service() {
               name="deposit"
               render={({field})=> (
                 <FormItem>
-                  <FormLabel></FormLabel>
+                  <FormLabel>Deposit</FormLabel>
                     <FormControl>
-                      <Input className='w-full' placeholder='Deposit' {...field}/>
+                      <Input className='w-full md:w-[400px]' placeholder='Deposit' {...field}/>
                     </FormControl>
                     <FormMessage/>
 
@@ -226,13 +252,11 @@ export default function Service() {
           <div className='flex flex-col md:flex-row gap-4 mt-4'>
             
           </div>
-          <div className='flex flex-row !p-0'>
+          <div className='flex flex-row mt-8 !p-0'>
             <Button type='submit'>Update Service</Button>
           </div>
         </form>
       </Form>
-
-    </Card>
     </div>
   )
 }

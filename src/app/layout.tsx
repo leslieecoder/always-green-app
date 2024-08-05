@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ToastProvider from "@/providers/react-tostify/ToastProvider";
 import "./globals.css";
 import { Montserrat } from 'next/font/google'
-
+import toast, { Toaster } from 'react-hot-toast';
 const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
@@ -23,9 +23,8 @@ export default function RootLayout({
     <html lang="en" className={montserrat.className}>
       
         <body className="min-h-screen min-w-screen">
-          <ToastProvider>
-            {children}
-          </ToastProvider>
+          {children}
+          <Toaster />
         </body>
       
     </html>

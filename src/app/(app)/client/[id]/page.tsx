@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { getClientById } from '@/services/clientService'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { ClientType, ServiceType } from '@/types/types'
 import { useUser } from '@/hooks/useUser'
 import { MdEdit, MdDelete } from "react-icons/md";
@@ -241,9 +241,11 @@ export default function Client() {
           clientId: client?.id
         })
       })
-      
+      const result = await response.json()
       if (response.status === 201) {
         toast.success("Service added successfully")
+        setServices([...services, result])
+        router.refresh()
       }
     } catch {
       console.log("error")
@@ -373,7 +375,7 @@ export default function Client() {
           <div className='flex justify-between'>
             <h3 className='text-sm font-semibold'>Services</h3>
             <Popover>
-              <PopoverTrigger className='underline text-primary text-sm'>+ Add Service</PopoverTrigger>
+              <PopoverTrigger onClick={()=>{router.push("?new=true")}} className='underline text-primary text-sm'>+ Add Service</PopoverTrigger>
               <PopoverContent>
                 <h1>Add new service to {client?.fullName}</h1>
                 <Form {...form}>

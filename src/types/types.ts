@@ -23,4 +23,5 @@ export interface ServiceType {
   deposit: number,
   userId: string
   date: string
+  clientId: string
 }

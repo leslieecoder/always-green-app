@@ -20,7 +20,16 @@ export const GET = withAuth(async (request: NextRequest, userId: string) => {
 // create new client
 export const POST = withAuth(async (request: NextRequest, userId: string) => {
     try{
+        // Make sure email is unique
         const data = await request.json()
+        const client = await db.client.findFirst({
+            where: {
+                email: data.email
+            }
+        })
+        if (client){
+            return NextResponse.json({error: 'Email already exists'}, {status: 400})
+        }
         const newClient = await db.client.create({
             data: {
                 ...data,

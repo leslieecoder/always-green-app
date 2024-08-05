@@ -44,6 +44,7 @@ const clientSchema = z.object({
 export default function NewClientPage() {
   const { user, loading } = useUser()
 
+  const router = useRouter()
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -67,10 +68,15 @@ export default function NewClientPage() {
           userId:user?.id,
         })
       })
-      
+      console.log(response)
+      if (response.status === 400) {
+        toast.error("Email already exists")
+      }
       if (response.status === 201) {
         toast.success("Client added successfully")
+        router.push("/client")
       }
+     
     } catch {
       console.log("error")
     }
