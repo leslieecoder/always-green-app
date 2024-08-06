@@ -40,3 +40,17 @@ export async function getServiceById(id: string) {
       throw new Error(await res.text())
   }
 }
+
+export async function deleteService(id: string) {
+  const res = await fetch(`/api/service/${id}`, {
+    method: 'DELETE'
+  })
+
+  if(res.ok){
+      const result = await res.json()
+      return result
+  }
+  else{
+      throw new Error(await res.text())
+  }
+}

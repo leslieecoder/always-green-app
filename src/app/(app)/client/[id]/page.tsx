@@ -78,7 +78,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Card from '@/components/card'
-import { getServicesByClientId } from '@/services/serviceService'
+import { getServicesByClientId, deleteService } from '@/services/serviceService'
 
 const clientSchema = z.object({
   fullName: z.string().min(1, {
@@ -115,6 +115,8 @@ export default function Client() {
   const [editMode, setEditMode] = useState(false)
   const [services, setServices] = useState<ServiceType[]>([])
   const [totalServices, setTotalServices] = useState(0)
+  const [totalDue, setTotalDue] = useState(0)
+  const [totalDeposit, setTotalDeposit] = useState(0)
   const [date, setDate] = useState<Date>()
   
   const { user, loading } = useUser()
@@ -175,6 +177,8 @@ export default function Client() {
         }
         const response = await getServicesByClientId(clientId)
         setServices(response.services)
+        setTotalDue(response.totalDue)
+        setTotalDeposit(response.totalDeposit)
         setTotalServices(response.totalServices)
       } catch(error) {
         console.log(error)
@@ -249,6 +253,20 @@ export default function Client() {
       }
     } catch {
       console.log("error")
+    }
+  }
+
+  async function handleDeleteService(id:string | undefined) {
+    if (!id) {
+      console.log('id is required')
+      return
+    }
+    try {
+      await deleteService(id)
+      toast.success("Service deleted")
+    } catch(error) {
+      console.log(error)
+      toast.error("Something went wrong")
     }
   }
 
@@ -491,9 +509,10 @@ export default function Client() {
               <TableRow>
                 <TableHead className="font-bold">Service</TableHead>
                 <TableHead className="font-bold">Date</TableHead>
-                <TableHead className="font-bold">Deposit</TableHead>
-                <TableHead className="font-bold">Due Amount</TableHead>
+                <TableHead className="font-bold text-right">Deposit</TableHead>
+                <TableHead className="font-bold text-right">Due Amount</TableHead>
                 <TableHead className="font-bold text-right">Total</TableHead>
+                <TableHead className="font-bold text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -502,17 +521,40 @@ export default function Client() {
                   <TableRow key={service.id}>
                     <TableCell><a href={`/service/${service.id}`} className='underline cursor-pointer'>{service.name}</a></TableCell>
                     <TableCell>{formatDate(service.date)}</TableCell>
-                    <TableCell>$ {service.deposit}</TableCell>
-                    <TableCell>$ {service.total - service.deposit}</TableCell>
+                    <TableCell className='text-right text-green-600'>$ {service.deposit}</TableCell>
+                    <TableCell className='text-right text-red-600'>$ {service.total - service.deposit}</TableCell>
                     <TableCell className="text-right">$ {service.total}</TableCell>
+                    <TableCell className="text-xl flex gap-4 justify-end">
+                      <a className='text-[#5fc885]' href={`/service/${service.id}`}> <MdEdit/></a>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button className='text-gray-400'> <MdDelete/></button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure you want to delete this service?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete this service.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={()=>handleDeleteService(service.id)}>Yes, delete</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </TableCell>
                   </TableRow>
                 )
               })}
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={4}>Total</TableCell>
-                <TableCell className="text-right">${totalServices}</TableCell>
+                <TableCell colSpan={2}>Total</TableCell>
+                <TableCell className="text-right font-bold text-green-600">${totalDeposit}</TableCell>
+                <TableCell className="text-right font-bold text-red-600">${totalDue}</TableCell>
+                <TableCell className="text-right font-bold text-gray-500">${totalServices}</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableFooter>
           </Table>

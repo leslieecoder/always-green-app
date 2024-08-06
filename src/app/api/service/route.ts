@@ -17,7 +17,9 @@ export const GET = withAuth(async (request: NextRequest) => {
 
       return NextResponse.json({
         services,
-        totalServices: services.reduce((acc, service) => acc + service.total, 0)
+        totalServices: services.reduce((acc, service) => acc + service.total, 0),
+        totalDue: services.reduce((acc, service) => acc + service.total - service.deposit, 0),
+        totalDeposit: services.reduce((acc, service) => acc + service.deposit, 0)
       }, {status: 200})
   }
   catch(error){

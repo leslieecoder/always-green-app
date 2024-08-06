@@ -45,7 +45,7 @@ import  {
   FormMessage
 } from "@/components/ui/form"
 import Card from '@/components/card'
-import { getServiceById } from '@/services/serviceService'
+import { getServiceById, deleteService } from '@/services/serviceService'
 
 const serviceSchema = z.object({
   name: z.string().min(1, {
@@ -129,6 +129,8 @@ export default function Service() {
       toast.error("Something went wrong")
     }
   }
+
+
 
   return (
     <div>
