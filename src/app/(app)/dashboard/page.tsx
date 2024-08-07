@@ -32,10 +32,10 @@ export default function DashboardPage() {
               <p className='font-bold'>Clients</p>
             </Link>
           </Card>
-          <Card className='w-full md:w-[200px] flex flex-col gap-4 items-center'>
+          {/* <Card className='w-full md:w-[200px] flex flex-col gap-4 items-center'>
             <RiPlantFill className='text-primary text-[50px]'/>
             <p className='font-bold'>Services</p>
-          </Card>
+          </Card> */}
           <Card className='w-full md:w-[200px] flex flex-col gap-4 items-center'>
             <Link href='/service/new' className='flex flex-col gap-4 items-center'>
               <IoIosAddCircle className='text-primary text-[50px]'/>

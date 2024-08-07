@@ -55,3 +55,39 @@ export const DELETE = withAuth(async (
       return NextResponse.json({error}, {status: 500})
   }
 })
+
+// Update service
+export const PUT = withAuth(async (
+  request: NextRequest,
+  userId: string,
+  { params }: { params: { id: string } }
+) => {
+  const { id } = params;
+
+  if (!id) {
+    return NextResponse.json({ error: "Id is required" }, { status: 400 });
+  }
+  try{
+    const {name, date, total, deposit, clientId} = await request.json()
+
+    const service = await db.service.update({
+        where: {
+            id: id
+        },
+        data: {
+            name,
+            date,
+            total,
+            deposit,
+            clientId
+        }
+    })
+
+    return NextResponse.json({
+      service
+    }, {status: 200})
+  }
+  catch(error){
+      return NextResponse.json({error}, {status: 500})
+  }
+})

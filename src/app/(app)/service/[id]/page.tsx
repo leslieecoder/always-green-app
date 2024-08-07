@@ -58,7 +58,6 @@ const serviceSchema = z.object({
   deposit: z.string().refine((val) => !isNaN(parseFloat(val)) && isFinite(Number(val)), {
     message: "Please enter a valid number"
   }),
-  clientId: z.string()
 })
 
 export default function Service() {
@@ -70,14 +69,13 @@ export default function Service() {
 
   const { user, loading } = useUser()
 
-  const formService = useForm<z.infer<typeof serviceSchema>>({
+  const form = useForm<z.infer<typeof serviceSchema>>({
     resolver: zodResolver(serviceSchema),
     defaultValues: {
       name: "",
       date: new Date(),
       total: "",
       deposit: "",
-      clientId: ""
     }
   })
 
@@ -93,7 +91,7 @@ export default function Service() {
         const response = await getServiceById(serviceId)
 
         setService(response.services[0])
-        formService.reset({
+        form.reset({
           name: response.services[0].name,
           date: new Date(response.services[0].date),
           total: response.services[0].total.toString(),
@@ -118,12 +116,13 @@ export default function Service() {
         },
         body: JSON.stringify({
           ...data,
+          clientId: service?.clientId,
           total: parseFloat(data.total),
           deposit: parseFloat(data.deposit)
         })
       })
       toast.success("Service updated")
-      router.push('/service')
+      router.push(`/client/${service?.clientId}`)
     } catch(error) {
       console.log(error)
       toast.error("Something went wrong")
@@ -154,24 +153,31 @@ export default function Service() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className='mt-8 font-bold text-lg'>Edit service</h1>
-      <Form {...formService}>
-        <form onSubmit={formService.handleSubmit(onSubmit)}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className='flex flex-col md:flex-row gap-4 mt-4'>
             <FormField
-              control={formService.control}
+              control={form.control}
               name="name"
               render={({field})=> (
                 <FormItem>
                   <FormLabel>Service</FormLabel>
                     <FormControl>
-                      <Select {...field} onValueChange={field.onChange}>
+                      <Select {...field} onValueChange={field.onChange} >
                         <SelectTrigger className='w-full md:w-[400px]'>
-                          <SelectValue placeholder="Service" />
+                          <SelectValue placeholder={`${field.value}`}/>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="pruning">Pruning</SelectItem>
                           <SelectItem value="snow removal">Snow Removal</SelectItem>
-                          <SelectItem value="maintance">Maintance</SelectItem>
+                          <SelectItem value="maintenance">Maintenance</SelectItem>
+                          <SelectItem value="garden block 4 horas">Garden block 4 horas</SelectItem>
+                          <SelectItem value="construction">Construction</SelectItem>
+                          <SelectItem value="rock">Rock</SelectItem>
+                          <SelectItem value="fabric">Fabric</SelectItem>
+                          <SelectItem value="plantas">Plantas</SelectItem>
+                          <SelectItem value="árboles">Árboles</SelectItem>
+                          <SelectItem value="irrigation">Irrigation</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -181,7 +187,7 @@ export default function Service() {
               )}
             />
             <FormField
-              control={formService.control}
+              control={form.control}
               name="date"
               render={({field})=> (
                 <FormItem>
@@ -222,7 +228,7 @@ export default function Service() {
           </div>
           <div className='flex flex-col md:flex-row gap-4 mt-4'>
             <FormField
-              control={formService.control}
+              control={form.control}
               name="total"
               render={({field})=> (
                 <FormItem>
@@ -236,7 +242,7 @@ export default function Service() {
               )}
             />
             <FormField
-              control={formService.control}
+              control={form.control}
               name="deposit"
               render={({field})=> (
                 <FormItem>

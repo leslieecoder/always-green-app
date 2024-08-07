@@ -70,6 +70,12 @@ export const DELETE = withAuth(async (
   }
 
   try {
+    // Delete all services related to the client first
+    await db.service.deleteMany({
+      where: { clientId: id }
+    });
+
+    // Now delete the client
     const client = await db.client.delete({
       where: { id: id }
     });

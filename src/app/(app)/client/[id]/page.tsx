@@ -264,6 +264,8 @@ export default function Client() {
     try {
       await deleteService(id)
       toast.success("Service deleted")
+      window.location.reload()
+      router.refresh()
     } catch(error) {
       console.log(error)
       toast.error("Something went wrong")
@@ -300,8 +302,7 @@ export default function Client() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you sure you want to delete this client?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete this client
-                    and remove your data from our servers.
+                  This action cannot be undone. It will permanently delete this client and <strong>all services</strong> associated with this client.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -413,7 +414,14 @@ export default function Client() {
                                   <SelectContent>
                                     <SelectItem value="pruning">Pruning</SelectItem>
                                     <SelectItem value="snow removal">Snow Removal</SelectItem>
-                                    <SelectItem value="maintance">Maintance</SelectItem>
+                                    <SelectItem value="maintenance">Maintenance</SelectItem>
+                                    <SelectItem value="garden block 4 horas">Garden block 4 horas</SelectItem>
+                                    <SelectItem value="construction">Construction</SelectItem>
+                                    <SelectItem value="rock">Rock</SelectItem>
+                                    <SelectItem value="fabric">Fabric</SelectItem>
+                                    <SelectItem value="plantas">Plantas</SelectItem>
+                                    <SelectItem value="árboles">Árboles</SelectItem>
+                                    <SelectItem value="irrigation">Irrigation</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
@@ -534,7 +542,7 @@ export default function Client() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure you want to delete this service?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete this service.
+                              This action cannot be undone. It will permanently delete this service.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

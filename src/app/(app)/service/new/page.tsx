@@ -129,7 +129,14 @@ export default function NewServicePage() {
                           <SelectContent>
                             <SelectItem value="pruning">Pruning</SelectItem>
                             <SelectItem value="snow removal">Snow Removal</SelectItem>
-                            <SelectItem value="maintance">Maintance</SelectItem>
+                            <SelectItem value="maintenance">Maintenance</SelectItem>
+                            <SelectItem value="garden block 4 horas">Garden block 4 horas</SelectItem>
+                            <SelectItem value="construction">Construction</SelectItem>
+                            <SelectItem value="rock">Rock</SelectItem>
+                            <SelectItem value="fabric">Fabric</SelectItem>
+                            <SelectItem value="plantas">Plantas</SelectItem>
+                            <SelectItem value="árboles">Árboles</SelectItem>
+                            <SelectItem value="irrigation">Irrigation</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>

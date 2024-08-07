@@ -28,7 +28,6 @@ export default function SideBar() {
         <ul className='flex flex-col w-full items-center text-white mt-4 md:mt-16'>
           <Link href="/dashboard" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Dashboard</Link>
           <Link href="/client" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Clients</Link>
-          <Link href="" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Reports</Link>
           <Link href="" className='p-3 hover:bg-secondary hover:text-primary cursor-pointer w-full text-center'>Settings</Link>
         </ul>
       </div>
