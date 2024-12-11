@@ -1,3 +1,9 @@
+## Always Green App
+<img width="1094" alt="Screenshot 2024-12-11 at 4 49 52 PM" src="https://github.com/user-attachments/assets/7c59af0e-691d-4da4-9614-1d0a224ddaa0" />
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
